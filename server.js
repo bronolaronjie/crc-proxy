@@ -13,6 +13,7 @@ app.get('/', async (req, res) => {
 
     res.send(html);
   } catch (err) {
+    console.error('Fetch error:', err);
     res.status(500).send('Error fetching content');
   }
 });
@@ -22,3 +23,4 @@ app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 
 });
+
