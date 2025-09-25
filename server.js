@@ -6,7 +6,7 @@ const app = express();
 // ✅ Manual route for FoundersGrotesk-Regular (exact match)
 app.get('/fonts/FoundersGrotesk-Regular.woff2', (req, res) => {
   console.log('Manual route hit for FoundersGrotesk-Regular');
-  const fontPath = path.join(__dirname, 'public/fonts/FoundersGrotesk-Regular.woff2');
+  const fontPath = path.resolve(__dirname, 'public/fonts/FoundersGrotesk-Regular.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'font/woff2');
   res.sendFile(fontPath);
@@ -15,7 +15,7 @@ app.get('/fonts/FoundersGrotesk-Regular.woff2', (req, res) => {
 // ✅ Manual route for Canela
 app.get('/fonts-local/canela-light-web.woff2', (req, res) => {
   console.log('Manual route hit for Canela');
-  const fontPath = path.join(__dirname, 'assets/fonts/canela-light-web.woff2');
+  const fontPath = path.resolve(__dirname, 'assets/fonts/canela-light-web.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'font/woff2');
   res.sendFile(fontPath);
