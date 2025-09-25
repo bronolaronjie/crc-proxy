@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 
 // ✅ Manual route for Founders Grotesk
-app.get('/custom-font/founders-grotesk-v3.woff2', (req, res) => {
+app.get('/fonts-local/founders-grotesk-v3.woff2', (req, res) => {
   console.log('Manual route hit for Founders Grotesk');
   const fontPath = path.join(__dirname, 'assets/fonts/founders-grotesk-v3.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,7 +13,7 @@ app.get('/custom-font/founders-grotesk-v3.woff2', (req, res) => {
 });
 
 // ✅ Manual route for Canela
-app.get('/custom-font/canela-light-web.woff2', (req, res) => {
+app.get('/fonts-local/canela-light-web.woff2', (req, res) => {
   console.log('Manual route hit for Canela');
   const fontPath = path.join(__dirname, 'assets/fonts/canela-light-web.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,10 +27,10 @@ app.get('/', async (req, res) => {
     const response = await fetch('https://shared.crcwiki.com/states-page/');
     let html = await response.text();
 
-    // ✅ Rewrite font URL to use proxy-hosted version
+    // ✅ Rewrite remote font URL to local proxy version
     html = html.replace(
       /https:\/\/shared\.crcwiki\.com\/fonts\/FoundersGrotesk-Regular\.woff2/g,
-      'https://crc-proxy.onrender.com/custom-font/founders-grotesk-v3.woff2'
+      'https://crc-proxy.onrender.com/fonts-local/founders-grotesk-v3.woff2'
     );
 
     // ✅ Inject custom font styling
@@ -38,14 +38,14 @@ app.get('/', async (req, res) => {
 <style>
   @font-face {
     font-family: 'Founders Grotesk';
-    src: url('/custom-font/founders-grotesk-v3.woff2') format('woff2');
+    src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
   }
 
   @font-face {
     font-family: 'Canela';
-    src: url('/custom-font/canela-light-web.woff2') format('woff2');
+    src: url('/fonts-local/canela-light-web.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
   }
@@ -63,7 +63,7 @@ app.get('/', async (req, res) => {
 </style>
 `;
 
-    // ✅ Inject the style block before </head>
+    // ✅ Inject style block before </head>
     html = html.replace('</head>', `${customStyle}</head>`);
 
     res.setHeader('Content-Type', 'text/html');
