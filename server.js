@@ -24,6 +24,39 @@ app.get('/', async (req, res) => {
       'https://crc-proxy.onrender.com/custom-font/founders-grotesk-v3.woff2'
     );
 
+    // ✅ Inject custom font styling
+    const customStyle = `
+  <style>
+    @font-face {
+      font-family: 'Founders Grotesk';
+      src: url('/custom-font/founders-grotesk-v3.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Canela';
+      src: url('/custom-font/canela-light-web.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    .role-name {
+      font-family: 'Canela', sans-serif;
+      font-weight: 300;
+    }
+
+    #stateSelectDropdown,
+    #citySelectDropdown {
+      font-family: 'Founders Grotesk', sans-serif;
+      font-weight: 300;
+    }
+  </style>
+`;
+
+    // ✅ Inject the style block before </head>
+    html = html.replace('</head>', `${customStyle}</head>`);
+
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -38,5 +71,6 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
