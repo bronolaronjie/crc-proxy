@@ -9,9 +9,19 @@ app.use(express.static(path.join(__dirname, 'public'), {
     if (filePath.endsWith('.woff2')) {
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Content-Type', 'font/woff2'); // ✅ This is the key fix
+      console.log('Serving font:', filePath);
     }
   }
 }));
+
+// ✅ Manual route for font delivery (fallback)
+app.get('/fonts/FoundersGrotesk-Regular.woff2', (req, res) => {
+  const fontPath = path.join(__dirname, 'public/fonts/FoundersGrotesk-Regular.woff2');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'font/woff2');
+  res.sendFile(fontPath);
+  console.log('Manually Serving font:', filePath);
+});
 
 // ✅ Proxy route
 app.get('/', async (req, res) => {
@@ -39,5 +49,6 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
