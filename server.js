@@ -3,24 +3,13 @@ const fetch = require('node-fetch');
 const path = require('path');
 const app = express();
 
-// ✅ Serve static files with CORS headers injected
-app.use(express.static(path.join(__dirname, 'public'), {
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.woff2')) {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Content-Type', 'font/woff2'); // ✅ This is the key fix
-      console.log('Serving font:', filePath);
-    }
-  }
-}));
-
-// ✅ Manual route for font delivery (fallback)
+// ✅ Manual route for font delivery (bypasses Render static layer)
 app.get('/fonts/FoundersGrotesk-Regular.woff2', (req, res) => {
-  const fontPath = path.join(__dirname, 'public/fonts/FoundersGrotesk-Regular.woff2');
+  const fontPath = path.join(__dirname, 'assets/fonts/FoundersGrotesk-Regular.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'font/woff2');
   res.sendFile(fontPath);
-  console.log('Manually Serving font:', filePath);
+  console.log('Manually Serving font:', fontPath);
 });
 
 // ✅ Proxy route
@@ -49,6 +38,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
-
-
-
