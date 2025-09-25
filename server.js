@@ -1,45 +1,54 @@
 const express = require('express');
-const fetch = require('node-fetch');
-const path = require('path');
+const puppeteer = require('puppeteer');
 const app = express();
 
-// ✅ Proxy route with color-only styling injected into <body>
+// ✅ Puppeteer-powered route with red/yellow styling
 app.get('/', async (req, res) => {
   try {
-    const response = await fetch('https://shared.crcwiki.com/states-page/');
-    let html = await response.text();
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
-    // ✅ Inject <style> directly before </body>
-    const injectedStyle = `
-<style>
-  .role-name {
-    color: red !important;
-    background: yellow !important;
-    border: 2px solid red !important;
-  }
+    const page = await browser.newPage();
+    await page.goto('https://shared.crcwiki.com/states-page/', {
+      waitUntil: 'networkidle0',
+    });
 
-  #stateSelectDropdown,
-  #citySelectDropdown {
-    color: red !important;
-    background: yellow !important;
-  }
+    // ✅ Inject styles after hydration
+    await page.evaluate(() => {
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .role-name {
+          color: red !important;
+          background: yellow !important;
+          border: 2px solid red !important;
+        }
 
-  .careers-container {
-    margin-left: 15% !important;
-    margin-right: 15% !important;
-  }
-</style>
-`;
+        #stateSelectDropdown,
+        #citySelectDropdown {
+          color: red !important;
+          background: yellow !important;
+        }
 
-    html = html.replace('</body>', `${injectedStyle}</body>`);
+        .careers-container {
+          margin-left: 15% !important;
+          margin-right: 15% !important;
+        }
+      `;
+      document.head.appendChild(style);
+    });
+
+    const content = await page.content();
+    await browser.close();
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'no-store');
-    res.send(html);
+    res.send(content);
   } catch (err) {
-    console.error('Fetch error:', err);
-    res.status(500).send('Error fetching content');
+    console.error('Puppeteer error:', err);
+    res.status(500).send('Error rendering page');
   }
 });
 
