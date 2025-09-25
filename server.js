@@ -34,56 +34,33 @@ app.get('/', async (req, res) => {
     );
 
     // ✅ Inject MutationObserver script before </body>
-    const mutationScript = `
+    const styleMessageScript = `
 <script>
-  window.addEventListener('load', function () {
-    const style = document.createElement('style');
-    style.innerHTML = \`
-      @font-face {
-        font-family: 'Founders Grotesk';
-        src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-      }
+  window.addEventListener('message', function (event) {
+    if (event.origin === 'https://your-webflow-domain.com' && event.data.type === 'applyRoleStyles') {
+      const style = document.createElement('style');
+      style.innerHTML = \`
+        @font-face {
+          font-family: 'Canela';
+          src: url('/fonts-local/canela-light-web.woff2') format('woff2');
+          font-weight: 300;
+          font-style: normal;
+        }
 
-      @font-face {
-        font-family: 'Canela';
-        src: url('/fonts-local/canela-light-web.woff2') format('woff2');
-        font-weight: 300;
-        font-style: normal;
-      }
-
-      .careers-container {
-        margin-left: 15% !important;
-        margin-right: 15% !important;
-      }
-
-      #stateSelectDropdown,
-      #citySelectDropdown {
-        font-family: 'Founders Grotesk', sans-serif !important;
-        font-weight: 400 !important;
-        color: red !important;
-        background: yellow !important;
-      }
-    \`;
-    document.head.appendChild(style);
-
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('.role-name').forEach(el => {
-        el.style.fontFamily = 'Canela, sans-serif';
-        el.style.fontWeight = '300';
-        el.style.color = 'red';
-        el.style.background = 'yellow';
-        el.style.border = '2px solid red';
-      });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
+        .role-name {
+          font-family: 'Canela', sans-serif !important;
+          font-weight: 300 !important;
+          color: red !important;
+          background: yellow !important;
+          border: 2px solid red !important;
+        }
+      \`;
+      document.head.appendChild(style);
+    }
   });
 </script>
 `;
-
-    html = html.replace('</body>', `${mutationScript}</body>`);
+html = html.replace('</body>', `${styleMessageScript}</body>`);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -99,3 +76,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
