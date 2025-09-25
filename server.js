@@ -3,10 +3,19 @@ const fetch = require('node-fetch');
 const path = require('path');
 const app = express();
 
-// ✅ Manual route for font delivery (bypasses Render static layer)
+// ✅ Manual route for Founders Grotesk
 app.get('/custom-font/founders-grotesk-v3.woff2', (req, res) => {
-  console.log('Manual route hit for custom font');
+  console.log('Manual route hit for Founders Grotesk');
   const fontPath = path.join(__dirname, 'assets/fonts/founders-grotesk-v3.woff2');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'font/woff2');
+  res.sendFile(fontPath);
+});
+
+// ✅ Manual route for Canela
+app.get('/custom-font/canela-light-web.woff2', (req, res) => {
+  console.log('Manual route hit for Canela');
+  const fontPath = path.join(__dirname, 'assets/fonts/canela-light-web.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'font/woff2');
   res.sendFile(fontPath);
@@ -26,32 +35,32 @@ app.get('/', async (req, res) => {
 
     // ✅ Inject custom font styling
     const customStyle = `
-  <style>
-    @font-face {
-      font-family: 'Founders Grotesk';
-      src: url('/custom-font/founders-grotesk-v3.woff2') format('woff2');
-      font-weight: 400;
-      font-style: normal;
-    }
+<style>
+  @font-face {
+    font-family: 'Founders Grotesk';
+    src: url('/custom-font/founders-grotesk-v3.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+  }
 
-    @font-face {
-      font-family: 'Canela';
-      src: url('/custom-font/canela-light-web.woff2') format('woff2');
-      font-weight: 300;
-      font-style: normal;
-    }
+  @font-face {
+    font-family: 'Canela';
+    src: url('/custom-font/canela-light-web.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+  }
 
-    .role-name {
-      font-family: 'Canela', sans-serif;
-      font-weight: 300;
-    }
+  .role-name {
+    font-family: 'Canela', sans-serif;
+    font-weight: 300;
+  }
 
-    #stateSelectDropdown,
-    #citySelectDropdown {
-      font-family: 'Founders Grotesk', sans-serif;
-      font-weight: 300;
-    }
-  </style>
+  #stateSelectDropdown,
+  #citySelectDropdown {
+    font-family: 'Founders Grotesk', sans-serif;
+    font-weight: 300;
+  }
+</style>
 `;
 
     // ✅ Inject the style block before </head>
@@ -71,7 +80,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
-
-
-
-
