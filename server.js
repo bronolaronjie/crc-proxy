@@ -4,12 +4,12 @@ const path = require('path');
 const app = express();
 
 // ✅ Manual route for font delivery (bypasses Render static layer)
-app.get('/fonts/FoundersGrotesk-Regular.woff2', (req, res) => {
+app.get('/font-proxy/FoundersGrotesk-Regular.woff2', (req, res) => {
+  console.log('Manual route hit for font');
   const fontPath = path.join(__dirname, 'assets/fonts/FoundersGrotesk-Regular.woff2');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'font/woff2');
   res.sendFile(fontPath);
-  console.log('Manually Serving font:', fontPath);
 });
 
 // ✅ Proxy route
@@ -21,7 +21,7 @@ app.get('/', async (req, res) => {
     // ✅ Rewrite font URL to use proxy-hosted version
     html = html.replace(
       /https:\/\/shared\.crcwiki\.com\/fonts\/FoundersGrotesk-Regular\.woff2/g,
-      'https://crc-proxy.onrender.com/fonts/FoundersGrotesk-Regular.woff2'
+      'https://crc-proxy.onrender.com/font-proxy/FoundersGrotesk-Regular.woff2'
     );
 
     res.setHeader('Content-Type', 'text/html');
@@ -38,3 +38,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
