@@ -53,12 +53,14 @@ app.get('/', async (req, res) => {
   .role-name {
     font-family: 'Canela', sans-serif !important;
     font-weight: 300 !important;
+    color: red !important;
   }
   
   #stateSelectDropdown,
   #citySelectDropdown {
     font-family: 'Founders Grotesk', sans-serif !important;
     font-weight: 300 !important;
+    color: red !important;
   }
 </style>
 `;
@@ -80,4 +82,5 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
