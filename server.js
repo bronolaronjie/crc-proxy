@@ -33,40 +33,47 @@ app.get('/', async (req, res) => {
       'https://crc-proxy.onrender.com/fonts-local/founders-grotesk-v3.woff2'
     );
 
-    // ✅ Inject custom font styling
-    const customStyle = `
-<style>
-  @font-face {
-    font-family: 'Founders Grotesk';
-    src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'Canela';
-    src: url('/fonts-local/canela-light-web.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-  }
-  
-  .role-name {
-    font-family: 'Canela', sans-serif !important;
-    font-weight: 300 !important;
-    color: red !important;
-  }
-  
-  #stateSelectDropdown,
-  #citySelectDropdown {
-    font-family: 'Founders Grotesk', sans-serif !important;
-    font-weight: 300 !important;
-    color: red !important;
-  }
-</style>
+    // ✅ Inject dynamic style script before </body>
+    const dynamicStyleScript = `
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    const style = document.createElement('style');
+    style.innerHTML = \`
+      @font-face {
+        font-family: 'Founders Grotesk';
+        src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
+        font-weight: 300;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: 'Canela';
+        src: url('/fonts-local/canela-light-web.woff2') format('woff2');
+        font-weight: 300;
+        font-style: normal;
+      }
+
+      .role-name {
+        font-family: 'Canela', sans-serif !important;
+        font-weight: 300 !important;
+        color: red !important;
+        background: yellow !important;
+      }
+
+      #stateSelectDropdown,
+      #citySelectDropdown {
+        font-family: 'Founders Grotesk', sans-serif !important;
+        font-weight: 300 !important;
+        color: red !important;
+        background: yellow !important;
+      }
+    \`;
+    document.head.appendChild(style);
+  });
+</script>
 `;
 
-    // ✅ Inject style block before </head>
-    html = html.replace('<body>', `${customStyle}<body>`);
+    html = html.replace('</body>', `${dynamicStyleScript}</body>`);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -82,6 +89,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
-
-
-
