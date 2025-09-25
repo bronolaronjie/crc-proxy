@@ -1,6 +1,16 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const app = express();
+const path = require('path');
+
+// Serve static files from /public
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Add CORS headers for all static assets
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.get('/', async (req, res) => {
   try {
@@ -23,4 +33,5 @@ app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 
 });
+
 
