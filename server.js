@@ -6,7 +6,7 @@ const app = express();
 // ✅ Serve static files with CORS headers injected
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.woff2') || filePath.endsWith('.woff') || filePath.endsWith('.ttf') || filePath.endsWith('.otf') || filePath.endsWith('.eot')) {
+    if (filePath.endsWith('.woff2')) {
       res.setHeader('Access-Control-Allow-Origin', '*');
     }
   }
@@ -17,6 +17,12 @@ app.get('/', async (req, res) => {
   try {
     const response = await fetch('https://shared.crcwiki.com/states-page/');
     let html = await response.text();
+
+    // ✅ Rewrite font URL to use proxy-hosted version
+    html = html.replace(
+      /https:\/\/shared\.crcwiki\.com\/fonts\/FoundersGrotesk-Regular\.woff2/g,
+      'https://crc-proxy.onrender.com/fonts/FoundersGrotesk-Regular.woff2'
+    );
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,3 +38,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
