@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
     @font-face {
       font-family: 'Founders Grotesk';
       src: url('/custom-font/founders-grotesk-v3.woff2') format('woff2');
-      font-weight: 300;
+      font-weight: 400;
       font-style: normal;
     }
 
@@ -71,6 +71,7 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
 
