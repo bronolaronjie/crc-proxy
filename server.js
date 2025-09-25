@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 
 // ✅ Apply CORS headers first — before anything else
-app.use((req, res, next) => {
+app.use('/fonts', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
@@ -30,3 +30,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
