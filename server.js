@@ -8,6 +8,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.woff2')) {
       res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Content-Type', 'font/woff2'); // ✅ This is the key fix
     }
   }
 }));
@@ -38,4 +39,5 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
