@@ -36,7 +36,7 @@ app.get('/', async (req, res) => {
     // ✅ Inject dynamic style script before </body>
     const dynamicStyleScript = `
 <script>
-  window.addEventListener('DOMContentLoaded', function () {
+  window.addEventListener('load', function () {
     const style = document.createElement('style');
     style.innerHTML = \`
       @font-face {
@@ -58,6 +58,7 @@ app.get('/', async (req, res) => {
         font-weight: 300 !important;
         color: red !important;
         background: yellow !important;
+        border: 2px solid red !important;
       }
 
       #stateSelectDropdown,
@@ -66,6 +67,11 @@ app.get('/', async (req, res) => {
         font-weight: 300 !important;
         color: red !important;
         background: yellow !important;
+      }
+
+      .careers-container {
+        margin-left: 15% !important;
+        margin-right: 15% !important;
       }
     \`;
     document.head.appendChild(style);
