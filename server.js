@@ -33,8 +33,8 @@ app.get('/', async (req, res) => {
       'https://crc-proxy.onrender.com/fonts-local/founders-grotesk-v3.woff2'
     );
 
-    // ✅ Inject dynamic style script before </body>
-    const dynamicStyleScript = `
+    // ✅ Inject MutationObserver script before </body>
+    const mutationScript = `
 <script>
   window.addEventListener('load', function () {
     const style = document.createElement('style');
@@ -42,7 +42,7 @@ app.get('/', async (req, res) => {
       @font-face {
         font-family: 'Founders Grotesk';
         src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
-        font-weight: 300;
+        font-weight: 400;
         font-style: normal;
       }
 
@@ -53,33 +53,37 @@ app.get('/', async (req, res) => {
         font-style: normal;
       }
 
-      .role-name {
-        font-family: 'Canela', sans-serif !important;
-        font-weight: 300 !important;
-        color: red !important;
-        background: yellow !important;
-        border: 2px solid red !important;
+      .careers-container {
+        margin-left: 15% !important;
+        margin-right: 15% !important;
       }
 
       #stateSelectDropdown,
       #citySelectDropdown {
         font-family: 'Founders Grotesk', sans-serif !important;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
         color: red !important;
         background: yellow !important;
       }
-
-      .careers-container {
-        margin-left: 15% !important;
-        margin-right: 15% !important;
-      }
     \`;
     document.head.appendChild(style);
+
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll('.role-name').forEach(el => {
+        el.style.fontFamily = 'Canela, sans-serif';
+        el.style.fontWeight = '300';
+        el.style.color = 'red';
+        el.style.background = 'yellow';
+        el.style.border = '2px solid red';
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
   });
 </script>
 `;
 
-    html = html.replace('</body>', `${dynamicStyleScript}</body>`);
+    html = html.replace('</body>', `${mutationScript}</body>`);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
