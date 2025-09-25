@@ -66,7 +66,7 @@ app.get('/', async (req, res) => {
 `;
 
     // ✅ Inject style block before </head>
-    html = html.replace('</head>', `${customStyle}</head>`);
+    html = html.replace('<body>', `${customStyle}<body>`);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -82,5 +82,6 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
