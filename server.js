@@ -37,7 +37,7 @@ app.get('/', async (req, res) => {
     const styleMessageScript = `
 <script>
   window.addEventListener('message', function (event) {
-    if (event.origin === 'https://your-webflow-domain.com' && event.data.type === 'applyRoleStyles') {
+    if (event.origin === 'https://staging-crc.webflow.io' && event.data.type === 'applyRoleStyles') {
       const style = document.createElement('style');
       style.innerHTML = \`
         @font-face {
@@ -76,4 +76,5 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
