@@ -39,26 +39,26 @@ app.get('/', async (req, res) => {
   @font-face {
     font-family: 'Founders Grotesk';
     src: url('/fonts-local/founders-grotesk-v3.woff2') format('woff2');
-    font-weight: 300;
+    font-weight: 400;
     font-style: normal;
   }
-
+  
   @font-face {
     font-family: 'Canela';
     src: url('/fonts-local/canela-light-web.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
   }
-
+  
   .role-name {
-    font-family: 'Canela', sans-serif;
-    font-weight: 300;
+    font-family: 'Canela', sans-serif !important;
+    font-weight: 300 !important;
   }
-
+  
   #stateSelectDropdown,
   #citySelectDropdown {
-    font-family: 'Founders Grotesk', sans-serif;
-    font-weight: 300;
+    font-family: 'Founders Grotesk', sans-serif !important;
+    font-weight: 300 !important;
   }
 </style>
 `;
@@ -80,3 +80,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
