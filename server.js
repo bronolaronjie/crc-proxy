@@ -10,6 +10,7 @@ app.get('/', async (req, res) => {
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: puppeteer.executablePath(), // fallback to resolved path
       cacheDirectory: '/opt/render/.cache/puppeteer',
       product: 'chrome'
     });
@@ -60,6 +61,7 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
 
