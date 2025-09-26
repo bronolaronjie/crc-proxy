@@ -1,59 +1,36 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
+const path = require('path');
 const app = express();
 
-// ✅ Puppeteer-powered route with red/yellow styling
+// ✅ Manual route for font delivery (bypasses Render static layer)
+app.get('/custom-font/founders-grotesk-v3.woff2', (req, res) => {
+  console.log('Manual route hit for custom font');
+  const fontPath = path.join(__dirname, 'assets/fonts/founders-grotesk-v3.woff2');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'font/woff2');
+  res.sendFile(fontPath);
+});
+
+// ✅ Proxy route
 app.get('/', async (req, res) => {
   try {
-    const puppeteer = require('puppeteer');
+    const response = await fetch('https://shared.crcwiki.com/states-page/');
+    let html = await response.text();
 
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: puppeteer.executablePath(), // fallback to resolved path
-      cacheDirectory: '/opt/render/.cache/puppeteer',
-      product: 'chrome'
-    });
-
-    const page = await browser.newPage();
-    await page.goto('https://shared.crcwiki.com/states-page/', {
-      waitUntil: 'networkidle0',
-    });
-
-    // ✅ Inject styles after hydration
-    await page.evaluate(() => {
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .role-name {
-          color: red !important;
-          background: yellow !important;
-          border: 2px solid red !important;
-        }
-
-        #stateSelectDropdown,
-        #citySelectDropdown {
-          color: red !important;
-          background: yellow !important;
-        }
-
-        .careers-container {
-          margin-left: 15% !important;
-          margin-right: 15% !important;
-        }
-      `;
-      document.head.appendChild(style);
-    });
-
-    const content = await page.content();
-    await browser.close();
+    // ✅ Rewrite font URL to use proxy-hosted version
+    html = html.replace(
+      /https:\/\/shared\.crcwiki\.com\/fonts\/FoundersGrotesk-Regular\.woff2/g,
+      'https://crc-proxy.onrender.com/custom-font/founders-grotesk-v3.woff2'
+    );
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'no-store');
-    res.send(content);
+
+    res.send(html);
   } catch (err) {
-    console.error('Puppeteer error:', err);
-    res.status(500).send('Error rendering page');
+    console.error('Fetch error:', err);
+    res.status(500).send('Error fetching content');
   }
 });
 
@@ -61,7 +38,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
-
-
-
-
