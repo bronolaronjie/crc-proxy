@@ -5,9 +5,13 @@ const app = express();
 // ✅ Puppeteer-powered route with red/yellow styling
 app.get('/', async (req, res) => {
   try {
+    const puppeteer = require('puppeteer');
+
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      cacheDirectory: '/opt/render/.cache/puppeteer',
+      product: 'chrome'
     });
 
     const page = await browser.newPage();
@@ -56,5 +60,6 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Proxy running on port ${PORT}`);
 });
+
 
 
